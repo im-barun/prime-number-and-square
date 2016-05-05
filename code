@@ -1,0 +1,49 @@
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
+
+public class Equations {
+	private static final long MOD = 1000007;
+
+	public static void main(String[] args) throws IOException {
+		StreamTokenizer in = new StreamTokenizer(new InputStreamReader(System.in));
+
+		in.nextToken();
+		int N = (int) in.nval;
+
+		int[] primes = new int[78948];
+		primes[0] = 2;
+		primes[1] = 3;
+		int index;
+		for (index = 2; primes[index - 1] <= N; index++) {
+			int test = primes[index - 1];
+			boolean prime = false;
+			while (!prime) {
+				test += 2;
+				prime = true;
+				for (int i = 0; i < index; i++) {
+					if (test % primes[i] == 0) {
+						prime = false;
+						break;
+					}
+					if (primes[i] > Math.sqrt(test)) {
+						break;
+					}
+				}
+			}
+			primes[index] = test;
+		}
+
+		long ans = 1;
+		for (int i = 0; i < index; i++) {
+			int count = 0;
+			for (int x = N; x > 0; x /= primes[i])
+				count += x / primes[i];
+			count %= MOD;
+			ans *= (2 * count + 1);
+			ans %= MOD;
+		}
+
+		System.out.println(ans);
+	}
+}
